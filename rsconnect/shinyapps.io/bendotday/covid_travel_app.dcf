@@ -1,0 +1,13 @@
+name: covid_travel_app
+title: covid_travel_app
+username:
+account: bendotday
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2590875
+bundleId: 3467367
+url: https://bendotday.shinyapps.io/covid_travel_app/
+when: 1596421657.42871
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: updatedata.R
