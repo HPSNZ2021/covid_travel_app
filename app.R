@@ -1,10 +1,13 @@
 ## COVID-19 Travel Policy Tracking App
 ## Ben Day
 ## Created: 17/7/2020
-## Modified: 01/09/2020
+## Modified: 23/09/2020
 ##
 ## Source: https://covidtracker.bsg.ox.ac.uk/
 
+
+
+# Initialisation ----------------------------------------------------------
 
 library(shiny)
 library(tidyverse)
@@ -12,12 +15,14 @@ library(lubridate)
 library(readxl)
 
 # Function
-
 addline_format <- function(x,...){
     gsub('\\s\\s','\n',x)
 }
 
-# Read raw data -----------------------------------------------------------
+
+# Update and read raw data -----------------------------------------------------------
+
+source(file = 'updatedata.R')
 
 df <- read_rds('covid_country_data.rds')
 
@@ -98,6 +103,13 @@ server <- function(input, output) {
         
     })
     
+    date_updated <- df %>% 
+        mutate(date = dmy(date)) %>%
+        arrange(desc(date)) %>% 
+        select(date) %>% 
+        slice(1) %>% 
+        pull(date)
+    
     status_data <- eventReactive(input$apply,{
         
         df <- df %>% mutate(date = dmy(date),
@@ -161,7 +173,7 @@ server <- function(input, output) {
                                           "4 - Border closed to  foreign travellers")),
                                position = "right") +
             scale_fill_manual(values = c("1" = '#34bc6e', "2" = "#648fff", "3" = "#ffb000", "4" = "#fe6100")) +
-            labs(subtitle = paste0('Data last updated ', today())) +
+            labs(subtitle = paste0('Data last updated ', date_updated)) +
             ggtitle(addline_format(paste0(as.character(names_plot()), '  Travel restrictions in 2020'))) +
             theme(legend.position = "none", 
                   text = element_text(size=16),
