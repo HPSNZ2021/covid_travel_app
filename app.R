@@ -1,7 +1,7 @@
 ## COVID-19 Travel Policy Tracking App
 ## Ben Day
 ## Created: 17/7/2020
-## Modified: 23/09/2020
+## Modified: 24/09/2020
 ##
 ## Source: https://covidtracker.bsg.ox.ac.uk/
 
@@ -12,20 +12,41 @@
 library(shiny)
 library(tidyverse)
 library(lubridate)
-library(readxl)
 
 # Function
 addline_format <- function(x,...){
     gsub('\\s\\s','\n',x)
 }
 
-
 # Update and read raw data -----------------------------------------------------------
 
-source(file = 'updatedata.R')
+# Download data as temporary file
+url <- 'https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/c8_internationaltravel.csv'
 
+# Read temporary file
+df <- read_csv(url)
+df_name <- "covid_country_data"
+
+# Pre-processing
+df <- df %>% rename('CountryName' = X1,
+                    'CountryCode' = X2 )
+df <- df %>%
+    pivot_longer(
+    cols = colnames(df[, !names(df) %in% c('CountryName', 'CountryCode')]),
+    names_to = "date",
+    values_to = "code",
+    values_drop_na = TRUE
+)
+
+# Save RDS
+saveRDS(df, file = paste0(df_name, ".rds"))
+rm(df, url, df_name)
+
+#source(file = 'updatedata.R', local = TRUE)
 df <- read_rds('covid_country_data.rds')
 
+
+# User Interface ----------------------------------------------------------
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -94,7 +115,7 @@ server <- function(input, output) {
     country_data <- eventReactive(input$submit,{
         
         df <- df %>% mutate(date = dmy(date),
-                            code = code,
+                            code = as.numeric(code),
                             daysold = as.numeric(difftime(today(), date, units = c("days")))) %>% 
             filter(CountryName == input$country,
                    code != 0)

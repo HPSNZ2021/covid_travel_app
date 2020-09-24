@@ -5,9 +5,9 @@ account: hpsnz
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2636247
-bundleId: 3660007
+bundleId: 3664206
 url: https://hpsnz.shinyapps.io/covid_travel_app/
-when: 1600834730.68296
+when: 1600912334.44072
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: README.md|data/2020-09-08.xlsx|data/2020-09-14.xlsx|data/2020-09-18.xlsx
