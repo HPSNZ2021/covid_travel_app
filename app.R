@@ -1,7 +1,7 @@
 ## COVID-19 Travel Policy Tracking App
 ## Ben Day
 ## Created: 17/7/2020
-## Modified: 24/09/2020
+## Modified: 16/04/2021
 ##
 ## Source: https://covidtracker.bsg.ox.ac.uk/
 
@@ -28,8 +28,8 @@ df <- read_csv(url)
 df_name <- "covid_country_data"
 
 # Pre-processing
-df <- df %>% rename('CountryName' = X1,
-                    'CountryCode' = X2 )
+df <- df %>% rename('CountryName' = country_code,
+                    'CountryCode' = country_name )
 df <- df %>%
     pivot_longer(
     cols = colnames(df[, !names(df) %in% c('CountryName', 'CountryCode')]),
